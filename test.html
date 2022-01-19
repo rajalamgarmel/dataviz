@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <style>
+        img { width:35px; }
+    </style>
+    <title>JS Bin</title>
+    <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $.getJSON("https://api.npoint.io/e7ff66ef17e30c52101a", function(data){
+                $.each(data, function(i, d){
+                    var monImage = "<img src='" + d.film_poster + "'/>";
+                    $("#espace").append(monImage);
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<div id="espace"></div>
+
+</body>
+</html>

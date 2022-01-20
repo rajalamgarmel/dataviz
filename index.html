@@ -4,29 +4,20 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega@5.21.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.2.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.20.0"></script>
 
     <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function(){
-            $.getJSON("https://api.npoint.io/e7ff66ef17e30c52101a", function(data){
-                $.each(data, function(i, d){
-                    var monImage = "<img src='" + d.film_poster + "'/>";
-                    $("#espace").append(monImage);
-                });
-            });
-        });
-    </script>
 
     <style>
-        img { width:35px; }
+        img { width:100px; }
     </style>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <title>Hello, world!</title>
+    <title>Exercie 3</title>
 </head>
 <body>
 <div class="container-fluid">
@@ -42,8 +33,70 @@
         </li>
     </ul>
     <div class="tab-content" id="pills-tabContent">
-        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">...</div>
+        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+            <p> D3 JS : données hospitalieres par class d'age.</p>
+            <script>
+
+                // set the dimensions and margins of the graph
+                var margin = {top: 20, right: 20, bottom: 30, left: 40},
+                    width = 960 - margin.left - margin.right,
+                    height = 500 - margin.top - margin.bottom;
+
+                // set the ranges
+                var x = d3.scaleBand()
+                    .range([0, width])
+                    .padding(0.1);
+                var y = d3.scaleLinear()
+                    .range([height, 0]);
+
+                // append the svg object to the body of the page
+                // append a 'group' element to 'svg'
+                // moves the 'group' element to the top left margin
+                var svg = d3.select("body").append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr("transform",
+                        "translate(" + margin.left + "," + margin.top + ")");
+
+                // get the data
+                d3.csv("donnees-hospitalieres-classe-age-hebdo-covid19-2022-01-13-19h06.csv").then(function(data) {
+
+                    // format the data
+                    data.forEach(function(d) {
+                        d.sales = +d.sales;
+                    });
+
+                    // Scale the range of the data in the domains
+                    x.domain(data.map(function(d) { return d.salesperson; }));
+                    y.domain([0, d3.max(data, function(d) { return d.sales; })]);
+
+                    // append the rectangles for the bar chart
+                    svg.selectAll(".bar")
+                        .data(data)
+                        .enter().append("rect")
+                        .attr("class", "bar")
+                        .attr("x", function(d) { return x(d.salesperson); })
+                        .attr("width", x.bandwidth())
+                        .attr("y", function(d) { return y(d.sales); })
+                        .attr("height", function(d) { return height - y(d.sales); });
+
+                    // add the x Axis
+                    svg.append("g")
+                        .attr("transform", "translate(0," + height + ")")
+                        .call(d3.axisBottom(x));
+
+                    // add the y Axis
+                    svg.append("g")
+                        .call(d3.axisLeft(y));
+
+                });
+
+            </script>
+
+        </div>
         <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">  <div id="vis"/>
+            <p> JQuery : données hospitalieres par class d'age.</p>
             <script>
                 const spec = {
                     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
@@ -57,17 +110,28 @@
                     "config": {}
                 };
                 vegaEmbed("#vis", spec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
-            </script></div>
+            </script>
+        </div>
         <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
 
+            <p> Les drapeaux des pays.</p>
+            <script type="text/javascript">
+                $(document).ready(function(){
+                    $.getJSON("https://api.npoint.io/152669acc4dbd26b1760", function(data){
+                        $.each(data, function(i, d){
+                            var monImage = "<img src='" + d.ImageURL + "'/>";
+                            $("#pills-contact").append(monImage);
+                        });
+                    });
+                });
+            </script>
         </div>
     </div>
 </div>
-<div id="espace"></div>
+
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
